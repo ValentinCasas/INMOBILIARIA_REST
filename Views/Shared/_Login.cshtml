@@ -1,0 +1,228 @@
+@model INMOBILIARIA_REST.Models.LoginView
+
+<div class="col-lg-5 mt-3">
+
+
+    <form class="form_container" asp-area="api" asp-controller="Propietario" asp-action="login">
+
+        <div class="title_container">
+            <p class="title">Login to your Account</p>
+            <span class="subtitle">Get started with our app, just create an account and enjoy the
+                experience.</span>
+        </div>
+        <br>
+        <div class="input_container">
+            <label asp-for="Usuario" class="control-label"></label>
+            <input asp-for="Usuario" class="form-control" />
+            <span asp-validation-for="Usuario" class="text-danger"></span>
+        </div>
+        <div class="input_container">
+            <label asp-for="Clave" class="control-label"></label>
+            <input asp-for="Clave" class="form-control" />
+            <span asp-validation-for="Clave" class="text-danger"></span>
+        </div>
+        @* <input type="submit" value="Entrar" class="btn btn-primary" /> *@
+        <button title="Sign In" type="submit" class="sign-in_btn">
+            <span>Sign In</span>
+        </button>
+
+        <div class="separator">
+            <hr class="line">
+            <span>Or</span>
+            <hr class="line">
+        </div>
+        <button title="Sign In" type="submit" class="sign-in_ggl">
+            <svg height="18" width="18" viewBox="0 0 32 32" xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <path
+                        d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"
+                        id="A"></path>
+                </defs>
+                <clipPath id="B">
+
+                </clipPath>
+                <g transform="matrix(.727273 0 0 .727273 -.954545 -1.45455)">
+                    <path fill="#fbbc05" clip-path="url(#B)" d="M0 37V11l17 13z"></path>
+                    <path fill="#ea4335" clip-path="url(#B)" d="M0 11l17 13 7-6.1L48 14V0H0z"></path>
+                    <path fill="#34a853" clip-path="url(#B)" d="M0 37l30-23 7.9 1L48 0v48H0z"></path>
+                    <path fill="#4285f4" clip-path="url(#B)" d="M48 48L17 24l-4-3 35-10z"></path>
+                </g>
+            </svg>
+            <span>Sign In with Google</span>
+        </button>
+
+        <p class="note">Terms of use &amp; Conditions</p>
+    </form>
+
+</div>
+
+
+
+<style>
+    .form_container {
+        width: fit-content;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        padding: 50px 40px 20px 40px;
+        background: linear-gradient(to top right, #ffffff, #f7f5f5);
+
+
+        box-shadow: 0px 106px 42px rgba(0, 0, 0, 0.01),
+            0px 59px 36px rgba(0, 0, 0, 0.05), 0px 26px 26px rgba(0, 0, 0, 0.09),
+            0px 7px 15px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 11px;
+        font-family: "Inter", sans-serif;
+    }
+
+    .logo_container {
+        box-sizing: border-box;
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(180deg, rgba(248, 248, 248, 0) 50%, #F8F8F888 100%);
+        border: 1px solid #F7F7F8;
+        filter: drop-shadow(0px 0.5px 0.5px #EFEFEF) drop-shadow(0px 1px 0.5px rgba(239, 239, 239, 0.5));
+        border-radius: 11px;
+    }
+
+    .title_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #212121;
+    }
+
+    .subtitle {
+        font-size: 0.725rem;
+        max-width: 80%;
+        text-align: center;
+        line-height: 1.1rem;
+        color: #8B8E98
+    }
+
+    .input_container {
+        width: 100%;
+        height: fit-content;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .icon {
+        width: 20px;
+        position: absolute;
+        z-index: 1;
+        left: 12px;
+        bottom: 9px;
+    }
+
+    .input_label {
+        font-size: 0.75rem;
+        color: #8B8E98;
+        font-weight: 600;
+    }
+
+    .input_field {
+        width: auto;
+        height: 40px;
+        padding: 0 0 0 40px;
+        border-radius: 7px;
+        outline: none;
+        border: 1px solid #e5e5e5;
+        filter: drop-shadow(0px 1px 0px #efefef) drop-shadow(0px 1px 0.5px rgba(239, 239, 239, 0.5));
+        transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
+    }
+
+    .input_field:focus {
+        border: 1px solid transparent;
+        box-shadow: 0px 0px 0px 2px #242424;
+        background-color: transparent;
+    }
+
+    .sign-in_btn {
+        width: 100%;
+        height: 40px;
+        border: 0;
+        background: #115DFC;
+        border-radius: 7px;
+        outline: none;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    .sign-in_ggl {
+        width: 100%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: #ffffff;
+        border-radius: 7px;
+        outline: none;
+        color: #242424;
+        border: 1px solid #e5e5e5;
+        filter: drop-shadow(0px 1px 0px #efefef) drop-shadow(0px 1px 0.5px rgba(239, 239, 239, 0.5));
+        cursor: pointer;
+    }
+
+
+    .sign-in_apl {
+        width: 100%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: #212121;
+        border-radius: 7px;
+        outline: none;
+        color: #ffffff;
+        border: 1px solid #e5e5e5;
+        filter: drop-shadow(0px 1px 0px #efefef) drop-shadow(0px 1px 0.5px rgba(239, 239, 239, 0.5));
+        cursor: pointer;
+    }
+
+    .separator {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        color: #8B8E98;
+    }
+
+    .separator .line {
+        display: block;
+        width: 100%;
+        height: 1px;
+        border: 0;
+        background-color: #e8e8e8;
+    }
+
+    .note {
+        font-size: 0.75rem;
+        color: #8B8E98;
+        text-decoration: underline;
+    }
+</style>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
