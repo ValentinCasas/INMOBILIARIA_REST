@@ -13,6 +13,7 @@ namespace INMOBILIARIA_REST.Models
 
         }
         public DbSet<Propietario> Propietario { get; set; }
+        public DbSet<Inmueble> Inmueble { get; set; }
 
 
     }

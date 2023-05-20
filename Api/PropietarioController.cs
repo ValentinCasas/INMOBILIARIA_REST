@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace INMOBILIARIA_REST.Api;
 
@@ -44,9 +45,9 @@ public class PropietarioController : ControllerBase
     }
 
     //POST api/<controller>/login
-    [HttpPost("login")]
+    [HttpPost("loginn")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromForm] LoginView loginView)
+    public async Task<IActionResult> Login([FromBody] LoginView loginView)
     {
         try
         {
@@ -94,6 +95,38 @@ public class PropietarioController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+
+    // GET api/propietario/data
+    [HttpGet("data")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public IActionResult GetUsuarioActual()
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        if (identity != null)
+        {
+            var emailClaim = identity.FindFirst(ClaimTypes.Name);
+            var fullNameClaim = identity.FindFirst("FullName");
+            var roleClaim = identity.FindFirst(ClaimTypes.Role);
+
+            var email = emailClaim?.Value;
+            var fullName = fullNameClaim?.Value;
+            var role = roleClaim?.Value;
+
+            var propietario = _context.Propietario.FirstOrDefault(x => x.Email == email);
+
+            if (propietario != null)
+            {
+                return Ok(propietario);
+            }
+        }
+
+        return Unauthorized();
+    }
+
+
+
+   
 
 
 }
