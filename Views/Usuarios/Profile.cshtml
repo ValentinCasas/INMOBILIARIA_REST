@@ -1,0 +1,86 @@
+@{
+    var lista = ViewBag.MyProfile;
+}
+@{
+    ViewData["Title"] = "MyProfile";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="profile-card d-flex flex-row">
+                <div class="card-header col-md-3">
+                    <div class="text-center">
+                        <img src="@lista.AvatarUrl" alt="Avatar" class="avatar">
+                        <h3>@lista.Nombre @lista.Apellido</h3>
+                    </div>
+                </div>
+                <div class="card-body col-md-9">
+                     <div class="d-flex justify-content-between align-items-center">
+                        <h4>Información personal</h4>
+                        <a href="@Url.Action("Update", new { id = lista.Id })" class="btn btn-outline-secondary"><ion-icon name="create-outline"></ion-icon> Editar</a>
+                    </div>
+                    <div>
+                        <h4>@lista.Email</h4>
+                    </div>
+                    <hr>
+                    <div>
+                        <p>Edad: @lista.Edad</p>
+                        <p>DNI: @lista.Dni</p>
+                    </div>
+                    <hr>
+                    <div>
+                        <h4>Rol</h4>
+                        @foreach (var kvp in (IDictionary<int, string>)ViewBag.Roles)
+                        {
+                            if ((int)lista.Rol == kvp.Key)
+                            {
+                                <p>@kvp.Value</p>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+        padding: 30px;
+        margin-top: 50px;
+    }
+
+    .profile-card .card-header {
+        background-color: #3f51b5;
+        color: #fff;
+        border-radius: 10px 10px 0 0;
+        padding: 20px;
+    }
+
+    .profile-card .avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: 20px auto;
+        display: block;
+    }
+
+    .profile-card h3 {
+        margin-top: 20px;
+    }
+
+    .profile-card h4 {
+        margin-top: 20px;
+        font-weight: 500;
+    }
+
+    .profile-card hr {
+        border-top: 1px solid #ccc;
+        margin: 20px 0;
+    }
+</style>

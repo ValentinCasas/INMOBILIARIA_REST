@@ -1,0 +1,108 @@
+@{
+    ViewData["Title"] = "Crear Contrato";
+    var ListaInquilinos = (IList<Inquilino>)ViewBag.listaInquilinos;
+    var ListaInmuebles = (IList<Inmueble>)ViewBag.listaInmuebles;
+}
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card col-lg-6 col-md-8 col-sm-10 mt-5">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Nuevo Contrato</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="form-group my-2">
+                    <label for="fechaInicio" class="form-label"><ion-icon name="calendar-outline"></ion-icon> Fecha de
+                        Inicio</label>
+                    <input type="date" class="form-control" id="fechaInicio" name="fechaInicio"
+                        placeholder="Ingrese la fecha de inicio">
+                </div>
+                <div class="form-group my-2">
+                    <label for="fechaFinalizacion" class="form-label"><ion-icon name="calendar-sharp"></ion-icon> Fecha
+                        de Finalización</label>
+                    <input type="date" class="form-control" id="fechaFinalizacion" name="fechaFinalizacion"
+                        placeholder="Ingrese la fecha de finalización">
+                </div>
+                <div class="form-group my-2">
+                    <label for="montoAlquilerMensual" class="form-label"><ion-icon name="cash-outline"></ion-icon> Monto
+                        Alquiler Mensual</label>
+                    <input type="number" class="form-control" id="montoAlquilerMensual" name="montoAlquilerMensual"
+                        placeholder="Ingrese el monto mensual">
+                </div>
+                <div class="form-group my-2">
+                    <label for="activo" class="form-label"><ion-icon name="checkbox-outline"></ion-icon> Activo</label>
+                    <div>
+                        <select class="form-control" id="activo" name="activo">
+                            <option value="true">activo
+                            </option>
+                            <option value="false">inactivo
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group my-2">
+                    <label for="idInquilino" class="form-label"><ion-icon name="people-outline"></ion-icon>
+                        Inquilino</label>
+                    <select class="form-control select2" id="idInquilino" name="idInquilino">
+                        <option value="">Seleccione un inquilino...</option>
+                        @foreach (var inquilino in ListaInquilinos)
+                        {
+                            <option value="@inquilino.Id">@inquilino.ToString()</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group my-2">
+                    <label for="idInmueble" class="form-label"><ion-icon name="people-outline"></ion-icon>
+                        Inmueble</label>
+                    <select class="form-control select2" id="idInmueble" name="idInmueble">
+                        <option value="">Seleccione un Inmueble...</option>
+                        @if (@ViewBag.InmuebleId != null)
+                        {
+                            @foreach (var inmueble in ListaInmuebles.Where(i => i.Id == @ViewBag.InmuebleId))
+                            {
+                                <option value="@ViewBag.InmuebleId" selected>@inmueble.ToString()</option>
+                            }
+                        }else{
+                        @foreach (var inmueble in ListaInmuebles)
+                        {
+                           if(inmueble.Estado != "agotado"){ 
+                            <option value="@inmueble.Id">@inmueble.ToString()</option>
+                           }
+                        }
+                        }
+                    </select>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="ion-ios-checkmark"></i> Guardar</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .card-header {
+        border-bottom: 0;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #555;
+    }
+
+    .form-control {
+        border-color: #E7E7E7;
+    }
+
+    .btn-primary {
+        background-color: #1D77CF;
+        border-color: #1D77CF;
+    }
+
+    .btn-primary:hover {
+        background-color: #0E68C2;
+        border-color: #0E68C2;
+    }
+</style>
+
+

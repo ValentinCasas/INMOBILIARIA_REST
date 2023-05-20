@@ -1,0 +1,447 @@
+@{
+    var lista = (IList<Contrato>)ViewBag.lista;
+    var pagos = (IList<Pago>)ViewBag.pagos;
+    ViewData["Title"] = "Lista de Contratos";
+}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+        <div class="card-header bg-primary text-white">
+          <h1 class="display-4 text-center">CONTRATOS</h1>
+          <input type="text" id="search-input" class="form-control"
+                        placeholder="Buscar por monto">
+        </div>
+
+      <div class="card bg-light" id="card-form">
+
+        <div class="card-body">
+
+          @if (lista.Count != 0){
+           <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var item in lista)
+            {
+                <div class="col">
+              <div class="card  border-secondary">
+        <div class="card-header ">
+      <span class="payment-count bg-primary">  @pagos.Where(p => p.IdContrato == item.Id).Count()
+      </span>
+    </div>
+                <div class="card-body">
+                  <h5 class="card-title "> $ @item.MontoAlquilerMensual </h5>
+                   <h6 class="card-subtitle mb-2 text-muted">@item.FechaInicio </h6>   
+                  <hr>
+                   <p class="card-text"> Fecha fin:  @item.FechaFinalizacion </p>
+                    
+                    <p class="card-text"> Activo:  @(item.Activo ? "si" : "no") </p>
+                    <div class="btn-group d-flex justify-content-center" role="group" aria-label="Acciones">
+                                            <a href="@Url.Action("Update", new { id = item.Id })"
+                                                class="btn btn-outline-secondary"><ion-icon
+                                                    name="create-outline"></ion-icon>Editar</a>
+                                            <a  class="buton" id="btn-delete-@item.Id" href="@Url.Action("Delete", new { id = item.Id })">
+                                                        <span class="button__text">Delete</span>
+                                                        <span class="button__icon"><svg class="svg" height="512"
+                                                                viewBox="0 0 512 512" width="512"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <title></title>
+                                                                <path
+                                                                    d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320"
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px">
+                                                                </path>
+                                                                <line
+                                                                    style="stroke:#fff;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+                                                                    x1="80" x2="432" y1="112" y2="112"></line>
+                                                                <path
+                                                                    d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40"
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px">
+                                                                </path>
+                                                                <line
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                                                                    x1="256" x2="256" y1="176" y2="400"></line>
+                                                                <line
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                                                                    x1="184" x2="192" y1="176" y2="400"></line>
+                                                                <line
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                                                                    x1="328" x2="320" y1="176" y2="400"></line>
+                                                            </svg></span>
+                                                    </a>
+                                        </div>
+                </div>
+
+
+<a  class="buton-pago" href="@Url.Action("Create", "Pagos", new { contratoId = item.Id })">
+                                                        <span class="button__text">Agregar pago</span>
+                                                         <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                                                    </a>
+
+
+                <div class="card-footer mt-2">
+                  <div class="">
+                    <details>
+                      <summary>Detalles</summary>
+                    <details>
+                      <summary>Inquilino:</summary>
+                      <div>
+                        <p>Nombre: @item.Inquilino.Nombre </p>
+                        <p>Apellido @item.Inquilino.Apellido</p>
+                        <p>Dni: @item.Inquilino.Dni</p>
+                        <p>Telefono: @item.Inquilino.Telefono</p>
+                        <p>Email: @item.Inquilino.Email</p>
+                      </div>
+                    </details>
+
+                    <details>
+                      <summary>Inmueble:</summary>
+                      <div>
+                        <p>Direccion: @item.Inmueble.Direccion </p>
+                        <p>Uso @item.Inmueble.Uso</p>
+                        <p>Tipo: @item.Inmueble.Tipo</p>
+                        <p>Ambientes: @item.Inmueble.CantidadAmbientes</p>
+                        <p>Coordenadas: @item.Inmueble.Coordenadas</p>
+                        <p>Precio: @item.Inmueble.PrecioInmueble</p>
+                        <p>Estado: @item.Inmueble.Estado</p>
+                      </div>
+                    </details>
+
+                    <details>
+                      <summary>Pagos:</summary>
+                      @foreach (var pago in pagos.Where(p => p.IdContrato == item.Id))
+                      {
+                        <div>
+                          <p>@pago.ToString()</p>
+                        </div>
+                      }
+                    </details>
+                    </details>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                        }
+           
+                     </div>     
+            
+                    }
+                    else
+                    {
+                        <h2 class="text-center">No hay contratos en el sitio</h2>
+                    }
+
+</div>
+</div>
+</div>
+</div>
+
+
+                <div id="add">
+                    <a class="btn btn-success" href="@Url.Action("Create")" role="button"><ion-icon
+                            name="add-outline"></ion-icon>
+                    </a>
+                </div>
+
+                <div id="buscarPorFecha">
+    <a class="btn btn-success" role="button"><ion-icon name="calendar-outline"></ion-icon></a>
+</div>
+
+
+
+<div id="form-container" class="modal" tabindex="-1" role="dialog">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  <ion-icon name="close-outline"></ion-icon>
+</button>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h2 class="modal-title">Busqueda de contratos vigentes por fecha</h2>
+
+      </div>
+      <div class="modal-body">
+        <form asp-action="ContratoPorFecha" method="post">
+          <div class="form-group">
+            <label for="fechaInicio"><ion-icon name="calendar-outline"></ion-icon> Fecha Inicial:</label>
+            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
+          </div>
+          <div class="form-group mt-4">
+            <label for="fechaFin"><ion-icon name="calendar-outline"></ion-icon> Fecha Final:</label>
+            <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
+          </div>
+          <button type="submit" class="btn btn-primary mt-4 col-md-12"><ion-icon name="search-outline"></ion-icon> Buscar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay"></div>
+
+
+
+
+
+<style>
+    summary {
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding: 5px;
+        background-color: #f5f5f5;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.2s ease;
+    }
+
+    summary:hover {
+        background-color: #ddd;
+    }
+
+    summary::-webkit-details-marker {
+        display: none;
+    }
+
+    /* Estilo del contenido */
+    details>div {
+        border: 1px solid #ddd;
+        border-top: none;
+        padding: 1rem;
+        background-color: #f9f9f9;
+        transition: background-color 0.2s ease;
+    }
+
+    details[open]>div {
+        border-top: 1px solid #ddd;
+    }
+
+    details:hover>div {
+        background-color: #f5f5f5;
+    }
+
+    .collapse {
+        display: none;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .card-body p {
+        display: inline-block;
+        margin-right: 1rem;
+    }
+
+    .card-body h3 {
+        margin-top: 0;
+    }
+
+    .collapse.show {
+        display: block;
+    }
+
+    #card-form {
+        background-color: #ada8a85c;
+        height: 500px;
+        overflow-y: scroll;
+    }
+
+  #add {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin: 20px;
+    }
+
+    .accordion-toggle {
+        transition: all .5s ease;
+    }
+
+    .accordion-toggle:hover {
+        background-color: #abe7a3;
+        cursor: pointer;
+    }
+
+    .table-responsive {
+        background-color: #c2c4cf;
+        border-radius: 5px;
+        border: .5px solid rgb(105, 101, 101);
+    }
+
+      .buton {
+        position: relative;
+        width: 150px;
+        height: 40px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        border: 1px solid #cc0000;
+        background-color: #e50000;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        overflow: hidden;
+    }
+
+    .buton-pago {
+        position: relative;
+       
+         margin-left: 10px;
+        margin-right:10px;
+        height: 40px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        border: 1px solid #34974d;
+        background-color: #3aa856;
+        border-radius:5px;
+        overflow: hidden;
+    }
+
+    .buton,
+    .buton-pago,
+    .button__icon,
+    .button__text {
+        transition: all 0.3s;
+    }
+
+    .buton .button__text {
+        transform: translateX(35px);
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .buton .button__text, .buton-pago .button__text {
+        transform: translateX(50px);
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .buton .button__icon {
+        position: absolute;
+        transform: translateX(109px);
+        height: 100%;
+        width: 39px;
+        background-color: #cc0000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .buton-pago .button__icon {
+        position: absolute;
+ 
+        height: 100%;
+        width: 39px;
+        background-color: #34974d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .buton .svg, .buton-pago .svg {
+        width: 20px;
+    }
+
+
+    .buton:hover {
+        background: #cc0000;
+    }
+
+    .buton-pago:hover {
+        background:  #34974d;
+    }
+
+    .buton:hover .button__text, .buton-pago:hover .button__text {
+        color: transparent;
+    }
+
+    
+
+    .buton:hover .button__icon{
+        width: 148px;
+        transform: translateX(0);
+    }
+
+    .buton-pago:hover .button__icon {
+        width: 100%;
+        transform: translateX(0);
+    }
+
+    .buton:active .button__icon {
+        background-color: #b20000;
+    }
+
+    .buton-pago:active .button__icon {
+        background-color: #2e8644;
+    }
+
+    .buton:active {
+        border: 1px solid #b20000;
+    }
+
+    .buton-pago:active {
+        border: 1px solid #2e8644;
+    }
+
+    .payment-count {
+  display: block;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+
+ #form-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background-color: white;
+  border: 1px solid #2828b3;
+  width: 50%;
+  height: 80%;
+  padding: 20px;
+}
+
+
+    #buscarPorFecha{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        margin: 20px;
+    }
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1rem;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.658);
+  z-index: 9998;
+  display: none;
+}
+
+</style>
+
+

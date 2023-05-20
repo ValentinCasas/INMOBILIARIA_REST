@@ -1,0 +1,217 @@
+@using INMOBILIARIA_REST.Models;
+
+@{
+    var lista = (IList<Usuario>)ViewBag.lista;
+    ViewData["Title"] = "usuarios";
+}
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card-header bg-primary text-white">
+                <h1 class="display-4 text-center mb-0">USUARIOS</h1>
+                <input type="text" id="search-input" class="form-control" placeholder="Buscar por nombre o apellido">
+            </div>
+            <div class="card border-0">
+                <div class="card-body">
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        @foreach (var item in lista)
+                        {
+                            <div class="col">
+                                <div class="card shadow-sm">
+                                    <img src="@item.AvatarUrl" class="card-img-top" alt="Avatar de @item.Nombre">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item.Nombre @item.Apellido</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted"> @item.Email</h6>
+                                        <hr>
+                                        <p class="card-text"><strong>DNI:</strong> @item.Dni</p>
+                                        <p class="card-text"><strong>Edad:</strong> @item.Edad</p>
+                                        
+                                        <p class="card-text"><strong>Rol:</strong> @ViewBag.Roles[(int)item.Rol]</p>
+                                        <div class="btn-group d-flex justify-content-center" role="group" aria-label="Acciones">
+                                            <a href="@Url.Action("Update", new { id = item.Id })"
+                                                class="btn btn-outline-secondary"><ion-icon
+                                                    name="create-outline"></ion-icon>Editar</a>
+                                            <a  class="buton" id="btn-delete-@item.Id" href="@Url.Action("Delete", new { id = item.Id })">
+                                                        <span class="button__text">Delete</span>
+                                                        <span class="button__icon"><svg class="svg" height="512"
+                                                                viewBox="0 0 512 512" width="512"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <title></title>
+                                                                <path
+                                                                    d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320"
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px">
+                                                                </path>
+                                                                <line
+                                                                    style="stroke:#fff;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+                                                                    x1="80" x2="432" y1="112" y2="112"></line>
+                                                                <path
+                                                                    d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40"
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px">
+                                                                </path>
+                                                                <line
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                                                                    x1="256" x2="256" y1="176" y2="400"></line>
+                                                                <line
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                                                                    x1="184" x2="192" y1="176" y2="400"></line>
+                                                                <line
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                                                                    x1="328" x2="320" y1="176" y2="400"></line>
+                                                            </svg></span>
+                                                    </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div id="no-results-message" class="text-center mt-3" style="display:none">No se encontraron
+                        resultados</div>
+                    @if (lista.Count == 0)
+                    {
+                        <h2 class="text-center mt-3">No hay Usuarios en el sitio</h2>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card-footer bg-white text-end" id="add" style="margin-top: 20px;">
+    <a class="btn btn-success" href="/Usuarios/Create" role="button"><ion-icon name="add-outline"></ion-icon></a>
+</div>
+
+
+
+
+
+
+<style>
+    .card-header {
+        border-bottom: none;
+    }
+
+    .card-footer {
+        border-top: none;
+    }
+
+    .btn-group {
+        font-size: 1.2rem;
+    }
+
+    #add {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin: 20px;
+    }
+
+
+    .input-container {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .input-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .input-group input {
+        border-radius: 30px 0 0 30px;
+        border: none;
+    }
+
+    .input-group button {
+        border-radius: 0 30px 30px 0;
+    }
+
+    .input-group button:hover {
+        background-color: #007bff;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+        outline: none;
+        border-color: #ced4da;
+    }
+
+    .form-control::placeholder {
+        color: #adb5bd;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+
+      .buton {
+        position: relative;
+        width: 150px;
+        height: 40px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        border: 1px solid #cc0000;
+        background-color: #e50000;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        overflow: hidden;
+    }
+
+    .buton,
+    .button__icon,
+    .button__text {
+        transition: all 0.3s;
+    }
+
+    .buton .button__text {
+        transform: translateX(35px);
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .buton .button__icon {
+        position: absolute;
+        transform: translateX(109px);
+        height: 100%;
+        width: 39px;
+        background-color: #cc0000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .buton .svg {
+        width: 20px;
+    }
+
+    .buton:hover {
+        background: #cc0000;
+    }
+
+    .buton:hover .button__text {
+        color: transparent;
+    }
+
+    .buton:hover .button__icon {
+        width: 148px;
+        transform: translateX(0);
+    }
+
+    .buton:active .button__icon {
+        background-color: #b20000;
+    }
+
+    .buton:active {
+        border: 1px solid #b20000;
+    }
+</style>

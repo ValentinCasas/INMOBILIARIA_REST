@@ -1,0 +1,96 @@
+@model INMOBILIARIA_REST.Models.Usuario
+
+@{
+	ViewData["Title"] = "Create";
+}
+
+
+<div class="d-flex justify-content-center mt-4">
+	<div class="card col-lg-6 col-md-8 col-sm-10">
+		<div class="card-header bg-primary text-white">
+			<h3 class="card-title mb-0">Nuevo Usuario</h3>
+		</div>
+		<div class="card-body">
+			<form asp-action="Create" enctype="multipart/form-data">
+				<div class="row">
+					<div class="form-group col col-md-6">
+						<label class="control-label"><i class="ion-person"></i> Nombre*</label>
+						<input asp-for="Nombre" class="form-control"/>
+					</div>
+					<div class="form-group col col-md-6">
+						<label asp-for="Apellido" class="control-label"><i class="ion-person"></i> Apellido*</label>
+						<input asp-for="Apellido" class="form-control" />
+					</div>
+					<div class="form-group col col-md-12">
+						<label asp-for="Email" class="control-label"><i class="ion-email"></i> Email*</label>
+						<input asp-for="Email" class="form-control" type="email" />
+					</div>
+					<div class="form-group col col-md-6">
+						<label asp-for="Clave" class="control-label"><i class="ion-key"></i> Clave*</label>
+						<input asp-for="Clave" type="password" class="form-control" />
+					</div>
+					<div class="form-group col-md-6">
+						<label asp-for="ConfirmarClave" class="control-label"><i class="ion-key"></i> Confirmar
+							contraseña*</label>
+						<input asp-for="ConfirmarClave" type="password" class="form-control" data-val="true" />
+					</div>
+					<div class="form-group">
+						<label asp-for="Edad" class="control-label"><i class="ion-clock"></i> Edad*</label>
+						<input asp-for="Edad" class="form-control" type="number"  />
+					</div>
+					<div class="form-group">
+						<label asp-for="Dni" class="control-label"><i class="ion-card"></i> Dni*</label>
+						<input asp-for="Dni" class="form-control" type="number"  />
+					</div>
+					<div class="form-group">
+						<label asp-for="AvatarFile" class="control-label"><i class="ion-image"></i> Avatar</label>
+						<input type="file" class="form-control" name="AvatarFile" />
+					</div>
+					<div class="form-group">
+						<label class="control-label"><i class="ion-person"></i> Rol*</label>
+						<select class="form-control" name="Rol">
+							@foreach (var kvp in (IDictionary<int, string>)ViewBag.Roles)
+							{
+								<option value="@kvp.Key">@kvp.Value</option>
+							}
+						</select>
+					</div>
+				</div>
+				<div class="text-center mt-4">
+					<button type="submit" class="btn btn-primary"><i class="ion-ios-checkmark"></i> Guardar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+<style>
+	.card-header {
+		border-bottom: 0;
+	}
+
+	.form-label {
+		font-weight: 500;
+		color: #555;
+	}
+
+	label {
+		margin-top: 5px;
+	}
+
+	.form-control {
+		border-color: #E7E7E7;
+	}
+
+	.btn-primary {
+		background-color: #1D77CF;
+		border-color: #1D77CF;
+	}
+
+	.btn-primary:hover {
+		background-color: #0E68C2;
+		border-color: #0E68C2;
+	}
+</style>

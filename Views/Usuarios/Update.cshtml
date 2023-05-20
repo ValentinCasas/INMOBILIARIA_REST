@@ -1,0 +1,184 @@
+@model INMOBILIARIA_REST.Models.Usuario
+
+@{
+    ViewData["Title"] = "Update";
+}
+
+
+<div class="d-flex justify-content-center mt-4">
+    <div class="card col-lg-6 col-md-8 col-sm-10">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Actualizar Usuario</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="UpdateUsuario" enctype="multipart/form-data" method="post">
+                <div class="row">
+
+
+                    <input asp-for="Id" type="hidden" value="@ViewBag.Usuario.Id" />
+
+                    <div class="form-group col col-md-6">
+                        <label class="control-label"><i class="ion-person"></i> Nombre*</label>
+                        <input asp-for="Nombre" value="@ViewBag.Usuario.Nombre" class="form-control"
+                            class="form-control" />
+                    </div>
+                    <div class="form-group col col-md-6">
+                        <label asp-for="Apellido" class="control-label"><i class="ion-person"></i> Apellido*</label>
+                        <input asp-for="Apellido" value="@ViewBag.Usuario.Apellido" class="form-control"
+                            class="form-control" />
+                    </div>
+                    <div class="form-group col col-md-6">
+                        <label asp-for="Email" class="control-label"><i class="ion-email"></i> Email*</label>
+                        <input asp-for="Email" value="@ViewBag.Usuario.Email" class="form-control" type="email"
+                            class="form-control" />
+                    </div>
+
+                    <div class="form-group col col-md-6 mt-4">
+                        <a class="btn btn-danger" id="cambiar-contrasena" href="#">Cambiar Contraseña</a>
+                    </div>
+
+                    <input asp-for="Clave" type="hidden" value="@ViewBag.Usuario.Clave" />
+
+
+
+
+                    <div class="password-container mt-2 mb-2" style="display:none;">
+                        <div class="form-group col col-md-12">
+                            <label asp-for="ClaveAntigua" class="control-label"><i class="ion-key"></i> Contraseña
+                                antigua*</label>
+                            <input asp-for="ClaveAntigua" type="password" class="form-control" data-val="true" />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label asp-for="NuevaClave" class="control-label"><i class="ion-key"></i> Nueva
+                                contraseña*</label>
+                            <input asp-for="NuevaClave" type="password" class="form-control" data-val="true" />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label asp-for="ConfirmarClave" class="control-label"><i class="ion-key"></i> Confirmar
+                                contraseña*</label>
+                            <input asp-for="ConfirmarClave" type="password" class="form-control" data-val="true" />
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label asp-for="Edad" class="control-label"><i class="ion-clock"></i> Edad*</label>
+                        <input asp-for="Edad" value="@ViewBag.Usuario.Edad" class="form-control" type="number"
+                            class="form-control" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Dni" class="control-label"><i class="ion-card"></i> Dni*</label>
+                        <input asp-for="Dni" value="@ViewBag.Usuario.Dni" class="form-control" type="number"
+                            class="form-control" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="AvatarFile" class="control-label"><i class="ion-image"></i> Avatar</label>
+                        <input type="file" value="@ViewBag.Usuario.AvatarUrl" class="form-control" name="AvatarFile"
+                            id="AvatarFile" />
+                    </div>
+                    <div id="contain-image" class="d-flex justify-content-center align-items-end col-md-6 mt-2">
+                        <img id="image" src="@ViewBag.Usuario.AvatarUrl">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"><i class="ion-person"></i> Rol*</label>
+                        <select class="form-control" name="Rol">
+                            @if (User.IsInRole("Empleado"))
+                            {
+                                @foreach (var kvp in (IDictionary<int, string>)ViewBag.Roles)
+                                {
+                                    if (kvp.Key == 3)
+                                    {
+                                        <option value="@kvp.Key"> @kvp.Value </option>
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                @foreach (var kvp in (IDictionary<int, string>)ViewBag.Roles)
+                                {
+                                    if (kvp.Key == @ViewBag.Usuario.Rol)
+                                    {
+                                        <option value="@kvp.Key" selected> @kvp.Value </option>
+
+                                    }
+                                    else
+                                    {
+                                        <option value="@kvp.Key"> @kvp.Value </option>
+                                    }
+                                }
+                            }
+                        </select>
+
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="ion-ios-checkmark"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .password-container {
+        display: none;
+        background-color: #b82c2c;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+
+
+    #cambiar-contrasena {
+        width: 100%;
+    }
+
+    #AvatarFile {
+        height: 100px;
+    }
+
+    #AvatarFile::-webkit-file-upload-button {
+        height: 100px;
+    }
+
+    #AvatarFile::-ms-browse {
+        height: 100px;
+    }
+
+    #image {
+        width: 100px;
+        height: 100px;
+        border: .5px solid rgba(36, 34, 34, 0.507);
+        border-radius: 50%;
+    }
+
+    .card-header {
+        border-bottom: 0;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #555;
+    }
+
+    label {
+        margin-top: 5px;
+    }
+
+    .form-control {
+        border-color: #E7E7E7;
+    }
+
+    .btn-primary {
+        background-color: #1D77CF;
+        border-color: #1D77CF;
+    }
+
+    .btn-primary:hover {
+        background-color: #0E68C2;
+        border-color: #0E68C2;
+    }
+</style>

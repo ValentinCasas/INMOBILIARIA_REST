@@ -1,0 +1,384 @@
+@{
+
+    var lista = (IList<Inmueble>)ViewBag.lista;
+    var contratos = (IList<Contrato>)ViewBag.contratos;
+    ViewData["Title"] = "Lista de Inmuebles";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="display-4 text-center">INMUEBLES</h1>
+                    <input type="text" id="search-input" class="form-control"
+                        placeholder="Buscar por localidad o disponibilidad">
+                </div>
+
+            <div class="card bg-light" id="card-form">
+                <div class="card-body">
+
+
+                    @if (lista.Count != 0)
+                    {
+                        <div class="row row-cols-1 row-cols-md-3 g-4">
+                            @foreach (var item in lista)
+                            {
+                                <div class="col">
+                                    <div class="card border-secondary">
+                                        <div class="card-body">
+                                            <h5 class="card-title ">@item.Direccion</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">@item.Uso - @item.Tipo</h6>
+                                            <hr>
+                                            <p class="card-text">Ambientes: @item.CantidadAmbientes</p>
+                                            <p class="card-text">Coordenadas: @item.Coordenadas</p>
+                                            <p class="card-text">Precio: @item.PrecioInmueble</p>
+                                            <p class="card-text card-title ">Estado: @item.Estado</p>
+                                            <div class="btn-group d-flex justify-content-center" role="group" aria-label="Acciones">
+                                            <a href="@Url.Action("Update", new { id = item.Id })"
+                                                class="btn btn-outline-secondary"><ion-icon
+                                                    name="create-outline"></ion-icon>Editar</a>
+                                            <a  class="buton" id="btn-delete-@item.Id" href="@Url.Action("Delete", new { id = item.Id })">
+                                                        <span class="button__text">Delete</span>
+                                                        <span class="button__icon"><svg class="svg" height="512"
+                                                                viewBox="0 0 512 512" width="512"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <title></title>
+                                                                <path
+                                                                    d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320"
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px">
+                                                                </path>
+                                                                <line
+                                                                    style="stroke:#fff;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+                                                                    x1="80" x2="432" y1="112" y2="112"></line>
+                                                                <path
+                                                                    d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40"
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px">
+                                                                </path>
+                                                                <line
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                                                                    x1="256" x2="256" y1="176" y2="400"></line>
+                                                                <line
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                                                                    x1="184" x2="192" y1="176" y2="400"></line>
+                                                                <line
+                                                                    style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                                                                    x1="328" x2="320" y1="176" y2="400"></line>
+                                                            </svg></span>
+                                                    </a>
+                                        </div>
+                                        </div>
+                                        <a  class="buton-pago" href="@Url.Action("Create", "Contratos", new { inmuebleId = item.Id })">
+                                                        <span class="button__text">Agregar contrato</span>
+                                                         <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                                                    </a>
+                                        <div class="card-footer">
+                                            <div class="">
+                    <details>
+                      <summary>Detalles</summary>
+                                            <details>
+                                                <summary>Propietario</summary>
+                                                <div>
+                                                    <p>Nombre: @item.Propietario.Nombre </p>
+                                                    <p>Apellido: @item.Propietario.Apellido </p>
+                                                    <p>Dni: @item.Propietario.Dni </p>
+                                                    <p>Telefono: @item.Propietario.Telefono </p>
+                                                    <p>Email: @item.Propietario.Email </p>
+                                                </div>
+                                            </details>
+                                            <details>
+                                                <summary>Contrato activo</summary>
+                                                 @foreach (var contrato in contratos.Where(c => c.IdInmueble == item.Id && c.Activo))
+                      {
+                        <div>
+                          <p>@contrato.ToString()</p>
+                        </div>
+                      }
+                                            </details>
+                    </details>
+                    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <h2 class="text-center">No hay inmuebles en el sitio</h2>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div  id="add">
+    <a class="btn btn-success" href="@Url.Action("Create")" role="button"><ion-icon name="add-outline"></ion-icon>
+    </a>
+</div>
+
+<div id="buscarPorFecha">
+    <a class="btn btn-success" role="button"><ion-icon name="calendar-outline"></ion-icon></a>
+</div>
+
+
+<div id="form-container" class="modal" tabindex="-1" role="dialog">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  <ion-icon name="close-outline"></ion-icon>
+</button>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h2 class="modal-title">Búsqueda de inmuebles disponibles entre fechas de contrato</h2>
+
+      </div>
+      <div class="modal-body">
+        <form asp-action="InmueblePorFecha" method="post">
+          <div class="form-group">
+            <label for="fechaInicio"><ion-icon name="calendar-outline"></ion-icon> Fecha Inicial:</label>
+            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
+          </div>
+          <div class="form-group mt-4">
+            <label for="fechaFin"><ion-icon name="calendar-outline"></ion-icon> Fecha Final:</label>
+            <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
+          </div>
+          <button type="submit" class="btn btn-primary mt-4 col-md-12"><ion-icon name="search-outline"></ion-icon> Buscar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay"></div>
+
+
+<style>
+    body {
+        background-color: #ffffff;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800' viewBox='0 0 200 200'%3E%3Cdefs%3E%3ClinearGradient id='a' gradientUnits='userSpaceOnUse' x1='88' y1='88' x2='0' y2='0'%3E%3Cstop offset='0' stop-color='%23005092'/%3E%3Cstop offset='1' stop-color='%23007cc4'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='75' y1='76' x2='168' y2='160'%3E%3Cstop offset='0' stop-color='%23868686'/%3E%3Cstop offset='0.09' stop-color='%23ababab'/%3E%3Cstop offset='0.18' stop-color='%23c4c4c4'/%3E%3Cstop offset='0.31' stop-color='%23d7d7d7'/%3E%3Cstop offset='0.44' stop-color='%23e5e5e5'/%3E%3Cstop offset='0.59' stop-color='%23f1f1f1'/%3E%3Cstop offset='0.75' stop-color='%23f9f9f9'/%3E%3Cstop offset='1' stop-color='%23FFFFFF'/%3E%3C/linearGradient%3E%3Cfilter id='c' x='0' y='0' width='200%25' height='200%25'%3E%3CfeGaussianBlur in='SourceGraphic' stdDeviation='12' /%3E%3C/filter%3E%3C/defs%3E%3Cpolygon fill='url(%23a)' points='0 174 0 0 174 0'/%3E%3Cpath fill='%23000' fill-opacity='.5' filter='url(%23c)' d='M121.8 174C59.2 153.1 0 174 0 174s63.5-73.8 87-94c24.4-20.9 87-80 87-80S107.9 104.4 121.8 174z'/%3E%3Cpath fill='url(%23b)' d='M142.7 142.7C59.2 142.7 0 174 0 174s42-66.3 74.9-99.3S174 0 174 0S142.7 62.6 142.7 142.7z'/%3E%3C/svg%3E");
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-position: top left;
+    }
+
+    summary {
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding: 1rem;
+        background-color: #f5f5f5;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.2s ease;
+    }
+
+    summary:hover {
+        background-color: #ddd;
+    }
+
+    summary::-webkit-details-marker {
+        display: none;
+    }
+
+    /* Estilo del contenido */
+    details>div {
+        border: 1px solid #ddd;
+        border-top: none;
+        padding: 1rem;
+        background-color: #f9f9f9;
+        transition: background-color 0.2s ease;
+    }
+
+    details[open]>div {
+        border-top: 1px solid #ddd;
+    }
+
+    details:hover>div {
+        background-color: #f5f5f5;
+    }
+
+    #card-form {
+        background-color: #ada8a85c;
+        height: 500px;
+        overflow-y: scroll;
+    }
+
+
+    .accordion-toggle {
+        transition: all .5s ease;
+    }
+
+    .accordion-toggle:hover {
+        background-color: #abe7a3;
+        cursor: pointer;
+    }
+
+    .table-responsive {
+        background-color: #c2c4cf;
+        border-radius: 5px;
+        border: .5px solid rgb(105, 101, 101);
+    }
+
+    #add {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin: 20px;
+    }
+
+    #buscarPorFecha{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        margin: 20px;
+    }
+      .buton {
+        position: relative;
+        width: 150px;
+        height: 40px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        border: 1px solid #cc0000;
+        background-color: #e50000;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        overflow: hidden;
+    }
+
+    .buton-pago {
+        position: relative;
+       
+         margin-left: 10px;
+        margin-right:10px;
+        height: 40px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        border: 1px solid #34974d;
+        background-color: #3aa856;
+        border-radius:5px;
+        overflow: hidden;
+    }
+
+    .buton,
+    .buton-pago,
+    .button__icon,
+    .button__text {
+        transition: all 0.3s;
+    }
+
+    .buton .button__text {
+        transform: translateX(35px);
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .buton .button__text, .buton-pago .button__text {
+        transform: translateX(50px);
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .buton .button__icon {
+        position: absolute;
+        transform: translateX(109px);
+        height: 100%;
+        width: 39px;
+        background-color: #cc0000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .buton-pago .button__icon {
+        position: absolute;
+ 
+        height: 100%;
+        width: 39px;
+        background-color: #34974d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .buton .svg, .buton-pago .svg {
+        width: 20px;
+    }
+
+
+    .buton:hover {
+        background: #cc0000;
+    }
+
+    .buton-pago:hover {
+        background:  #34974d;
+    }
+
+    .buton:hover .button__text, .buton-pago:hover .button__text {
+        color: transparent;
+    }
+
+    
+
+    .buton:hover .button__icon{
+        width: 148px;
+        transform: translateX(0);
+    }
+
+    .buton-pago:hover .button__icon {
+        width: 100%;
+        transform: translateX(0);
+    }
+
+    .buton:active .button__icon {
+        background-color: #b20000;
+    }
+
+    .buton-pago:active .button__icon {
+        background-color: #2e8644;
+    }
+
+    .buton:active {
+        border: 1px solid #b20000;
+    }
+
+    .buton-pago:active {
+        border: 1px solid #2e8644;
+    }
+
+ #form-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background-color: white;
+  border: 1px solid #2828b3;
+  width: 50%;
+  height: 80%;
+  padding: 20px;
+}
+
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1rem;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.658);
+  z-index: 9998;
+  display: none;
+}
+
+
+</style>
+
+

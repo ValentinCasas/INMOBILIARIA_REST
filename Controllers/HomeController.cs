@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using INMOBILIARIA_REST.Models;
 
-namespace INMOBILIARIA.Controllers;
+namespace INMOBILIARIA_REST.Controllers;
 
 public class HomeController : Controller
 {

@@ -1,0 +1,87 @@
+@model INMOBILIARIA_REST.Models.Propietario
+@{
+    ViewData["Title"] = "Crear Propietario";
+}
+
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card col-lg-6 col-md-8 col-sm-10 mt-5">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Nuevo Propietario</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="row">
+
+                    <div class="form-group col col-md-6">
+                        <label class="form-label"><i class="ion-person"></i> Nombre</label>
+                        <input asp-for="Nombre" type="text" class="form-control" id="nombre"
+                            placeholder="Ingrese el nombre">
+                    </div>
+
+                    <div class="form-group col col-md-6">
+                        <label class="form-label"><i class="ion-person"></i> Apellido</label>
+                        <input asp-for="Apellido" type="text" class="form-control" id="apellido"
+                            placeholder="Ingrese el apellido">
+                    </div>
+
+                    <div class="form-group col col-md-6">
+                        <label class="form-label"><i class="ion-card"></i> DNI</label>
+                        <input asp-for="Dni" type="number" class="form-control" id="dni" placeholder="Ingrese el DNI" />
+                    </div>
+
+                    <div class="form-group col col-md-6">
+                        <label class="form-label"><i class="ion-ios-telephone"></i> Teléfono</label>
+                        <input asp-for="Telefono" type="number" class="form-control" id="telefono"
+                            placeholder="Ingrese el teléfono" />
+                    </div>
+
+                    <div class="form-group col col-md-12">
+                        <label class="form-label"><i class="ion-email"></i> Email</label>
+                        <input asp-for="Email" type="email" class="form-control" id="email" placeholder="Ingrese el email" />
+                    </div>
+
+                    <div class="form-group col col-md-6">
+                        <label class="control-label"><i class="ion-key"></i> Clave*</label>
+                        <input asp-for="Clave" type="password" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label class="control-label"><i class="ion-key"></i> Confirmar
+                            contraseña*</label>
+                        <input asp-for="ConfirmarClave" type="password" class="form-control" data-val="true" />
+                    </div>
+
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="ion-ios-checkmark"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-header {
+        border-bottom: 0;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #555;
+    }
+
+    .form-control {
+        border-color: #E7E7E7;
+    }
+
+    .btn-primary {
+        background-color: #1D77CF;
+        border-color: #1D77CF;
+    }
+
+    .btn-primary:hover {
+        background-color: #0E68C2;
+        border-color: #0E68C2;
+    }
+</style>

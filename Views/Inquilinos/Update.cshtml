@@ -1,0 +1,67 @@
+
+@{
+    var inquilino = ViewBag.inquilino;
+    ViewData["Title"] = "Actualizar Inquilino";
+}
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card col-lg-6 col-md-8 col-sm-10 mt-5">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Nuevo Inquilino</h3>
+        </div>
+        <div class="card-body">
+            <form class="container mt-5" asp-action="UpdateInquilino" method="post">
+                <input type="hidden" id="id" value="@inquilino.Id" name="id">
+                <div class="form-group">
+                    <label for="nombre" class="form-label"><i class="ion-person"></i> Nombre</label>
+                    <input type="text" value="@inquilino.Nombre" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre">
+                </div>
+                <div class="form-group">
+                    <label for="apellido" class="form-label"><i class="ion-person"></i> Apellido</label>
+                    <input type="text" value="@inquilino.Apellido" class="form-control" id="apellido" name="apellido" placeholder="Ingrese el apellido">
+                </div>
+                <div class="form-group">
+                    <label for="dni" class="form-label"><i class="ion-card"></i> DNI</label>
+                    <input type="number" value="@inquilino.Dni" class="form-control" id="dni" name="dni" placeholder="Ingrese el DNI">
+                </div>
+                <div class="form-group">
+                    <label for="telefono" class="form-label"><i class="ion-ios-telephone"></i> Teléfono</label>
+                    <input type="number" value="@inquilino.Telefono" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el teléfono">
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label"><i class="ion-email"></i> Email</label>
+                    <input type="email" value="@inquilino.Email" class="form-control" id="email" name="email" placeholder="Ingrese el email">
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="ion-ios-checkmark"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .card-header {
+        border-bottom: 0;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: #555;
+    }
+    
+    .form-control {
+        border-color: #E7E7E7;
+    }
+    
+    .btn-primary {
+        background-color: #1D77CF;
+        border-color: #1D77CF;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0E68C2;
+        border-color: #0E68C2;
+    }
+</style>
