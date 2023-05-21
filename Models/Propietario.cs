@@ -21,13 +21,13 @@ namespace INMOBILIARIA_REST.Models
         public string Clave { get; set; }
 
         [NotMapped]
-        public string ClaveAntigua { get; set; }
+        public string? ClaveAntigua { get; set; }
 
         [NotMapped]
-        public string NuevaClave { get; set; }
+        public string? NuevaClave { get; set; }
 
         [NotMapped]
-        public string ConfirmarClave { get; set; }
+        public string? ConfirmarClave { get; set; }
 
 
         public override string ToString()
