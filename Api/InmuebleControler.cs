@@ -205,10 +205,6 @@ public class InmuebleController : ControllerBase
 
 
 
-
-
-
-
     private Propietario ObtenerPropietarioLogueado()
     {
         var email = User.Identity.Name;
