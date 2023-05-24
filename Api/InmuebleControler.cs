@@ -59,7 +59,7 @@ public class InmuebleController : ControllerBase
 
 
 
-    //Dado un inmueble retorna el contrato activo de dicho inmueble
+    // Dado un inmueble retorna el contrato activo de dicho inmueble
     [HttpPost("contrato-vigente")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult ObtenerContratoVigente([FromBody] Inmueble inmueble)
@@ -77,8 +77,8 @@ public class InmuebleController : ControllerBase
         }
 
         var contratoVigente = _context.Contrato
-             .Include(c => c.Inquilino)
-             .FirstOrDefault(contrato => contrato.IdInmueble == inmuebleEncontrado.Id && contrato.Activo);
+            .Include(c => c.Inquilino)
+            .FirstOrDefault(contrato => contrato.IdInmueble == inmuebleEncontrado.Id && contrato.Activo);
 
         if (contratoVigente == null)
         {
@@ -120,24 +120,47 @@ public class InmuebleController : ControllerBase
     }
 
 
-    //Dado un Contrato, retorna los pagos de dicho contrato
-    [HttpPost("pagos-contrato")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public IActionResult ObtenerPagosContrato([FromBody] Contrato contratoVer)
-    {
-        var propietarioActual = ObtenerPropietarioLogueado();
-        if (propietarioActual == null)
-            return Unauthorized();
+    // Dado un Contrato, retorna los pagos de dicho contrato
+    // Dado un Contrato, retorna los pagos de dicho contrato
+[HttpGet("pagos-contrato/{contratoId}")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+public IActionResult ObtenerPagosContrato(int contratoId)
+{
+    var propietarioActual = ObtenerPropietarioLogueado();
+    if (propietarioActual == null)
+        return Unauthorized();
 
-        if (contratoVer == null)
-            return BadRequest("No se proporcionó un contrato válido.");
+    var contratoVer = _context.Contrato
+        .Include(c => c.Inquilino)
+        .Include(c => c.Inmueble)
+            .ThenInclude(i => i.Propietario)
+        .FirstOrDefault(c => c.Id == contratoId);
 
-        var pagosContrato = _context.Pago
-            .Where(pago => pago.IdContrato == contratoVer.Id)
-            .ToList();
+    if (contratoVer == null)
+        return BadRequest("No se proporcionó un contrato válido.");
 
-        return Ok(pagosContrato);
-    }
+    var pagosContrato = _context.Pago
+        .Include(p => p.Contrato)
+            .ThenInclude(c => c.Inquilino)
+        .Include(p => p.Contrato)
+            .ThenInclude(c => c.Inmueble)
+                .ThenInclude(i => i.Propietario)
+        .Where(pago => pago.IdContrato == contratoVer.Id)
+        .Select(pago => new {
+            pago.Id,
+            pago.IdContrato,
+            pago.Contrato,
+            pago.NumDePago,
+            pago.FechaDePago,
+            pago.Importe
+        })
+        .ToList();
+
+
+    return Ok(pagosContrato);
+}
+
+
 
     // Actualizar Perfil
     [HttpPost("actualizar-perfil")]
