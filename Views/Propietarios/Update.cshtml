@@ -11,7 +11,7 @@
             <h3 class="card-title mb-0">Nuevo Propietario</h3>
         </div>
         <div class="card-body">
-            <form class="container mt-5" asp-action="UpdatePropietario" method="post">
+            <form class="container mt-5" asp-action="UpdatePropietario" enctype="multipart/form-data" method="post">
                 <div class="row">
 
                     <input type="hidden" id="id" value="@propietario.Id" name="id">
@@ -62,6 +62,15 @@
                         <label class="form-label"><i class="ion-ios-telephone"></i> Teléfono</label>
                         <input asp-for="Telefono" type="number" value="@propietario.Telefono" class="form-control"
                             id="telefono" placeholder="Ingrese el teléfono">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label asp-for="AvatarFile" class="control-label"><i class="ion-image"></i> Avatar</label>
+                        <input type="file" value="@propietario.AvatarUrl" class="form-control" name="AvatarFile"
+                            id="AvatarFile" />
+                    </div>
+                    <div id="contain-image" class="d-flex justify-content-center align-items-end col-md-6 mt-2">
+                        <img id="image" src="@propietario.AvatarUrl">
                     </div>
 
                     <div class="form-group">
@@ -117,5 +126,24 @@
 
     #cambiar-contrasena {
         width: 100%;
+    }
+
+    #AvatarFile {
+        height: 100px;
+    }
+
+    #AvatarFile::-webkit-file-upload-button {
+        height: 100px;
+    }
+
+    #AvatarFile::-ms-browse {
+        height: 100px;
+    }
+
+    #image {
+        width: 100px;
+        height: 100px;
+        border: .5px solid rgba(36, 34, 34, 0.507);
+        border-radius: 50%;
     }
 </style>

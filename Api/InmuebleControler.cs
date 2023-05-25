@@ -121,44 +121,44 @@ public class InmuebleController : ControllerBase
 
 
     // Dado un Contrato, retorna los pagos de dicho contrato
-    // Dado un Contrato, retorna los pagos de dicho contrato
-[HttpGet("pagos-contrato/{contratoId}")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public IActionResult ObtenerPagosContrato(int contratoId)
-{
-    var propietarioActual = ObtenerPropietarioLogueado();
-    if (propietarioActual == null)
-        return Unauthorized();
+    [HttpGet("pagos-contrato/{contratoId}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public IActionResult ObtenerPagosContrato(int contratoId)
+    {
+        var propietarioActual = ObtenerPropietarioLogueado();
+        if (propietarioActual == null)
+            return Unauthorized();
 
-    var contratoVer = _context.Contrato
-        .Include(c => c.Inquilino)
-        .Include(c => c.Inmueble)
-            .ThenInclude(i => i.Propietario)
-        .FirstOrDefault(c => c.Id == contratoId);
-
-    if (contratoVer == null)
-        return BadRequest("No se proporcionó un contrato válido.");
-
-    var pagosContrato = _context.Pago
-        .Include(p => p.Contrato)
-            .ThenInclude(c => c.Inquilino)
-        .Include(p => p.Contrato)
-            .ThenInclude(c => c.Inmueble)
+        var contratoVer = _context.Contrato
+            .Include(c => c.Inquilino)
+            .Include(c => c.Inmueble)
                 .ThenInclude(i => i.Propietario)
-        .Where(pago => pago.IdContrato == contratoVer.Id)
-        .Select(pago => new {
-            pago.Id,
-            pago.IdContrato,
-            pago.Contrato,
-            pago.NumDePago,
-            pago.FechaDePago,
-            pago.Importe
-        })
-        .ToList();
+            .FirstOrDefault(c => c.Id == contratoId);
+
+        if (contratoVer == null)
+            return BadRequest("No se proporcionó un contrato válido.");
+
+        var pagosContrato = _context.Pago
+            .Include(p => p.Contrato)
+                .ThenInclude(c => c.Inquilino)
+            .Include(p => p.Contrato)
+                .ThenInclude(c => c.Inmueble)
+                    .ThenInclude(i => i.Propietario)
+            .Where(pago => pago.IdContrato == contratoVer.Id)
+            .Select(pago => new
+            {
+                pago.Id,
+                pago.IdContrato,
+                pago.Contrato,
+                pago.NumDePago,
+                pago.FechaDePago,
+                pago.Importe
+            })
+            .ToList();
 
 
-    return Ok(pagosContrato);
-}
+        return Ok(pagosContrato);
+    }
 
 
 

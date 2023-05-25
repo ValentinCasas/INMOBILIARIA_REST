@@ -1,8 +1,8 @@
 @{
 
     ViewData["Title"] = "Actualizar Inmueble";
-      var ListaPropietarios = (IList<Propietario>)ViewBag.listaPropietarios;
-        var Inmueble = ViewBag.inmueble;
+    var ListaPropietarios = (IList<Propietario>)ViewBag.listaPropietarios;
+    var Inmueble = ViewBag.inmueble;
 }
 
 
@@ -13,54 +13,68 @@
             <h3 class="card-title mb-0">Actualizar Inmueble</h3>
         </div>
         <div class="card-body">
-            <form class="container mt-5" asp-action="UpdateInmueble" method="post">
+            <form class="container mt-5" asp-action="UpdateInmueble" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="id" value="@Inmueble.Id" name="id">
-                <div class="form-group">
-                    <label for="direccion" class="form-label"><i class="ion-location"></i> Direccion</label>
-                    <input type="text" value="@Inmueble.Direccion" class="form-control" id="direccion"
-                        name="direccion" placeholder="Ingrese la direccion">
-                </div>
-                <div class="form-group">
-                    <label for="uso" class="form-label"><i class="ion-flag"></i> Uso</label>
-                    <input type="text" value="@Inmueble.Uso" class="form-control" id="uso" name="uso"
-                        placeholder="Ingrese el uso">
-                </div>
-                <div class="form-group">
-                    <label for="tipo" class="form-label"><i class="ion-card"></i> Tipo</label>
-                    <input type="text" value="@Inmueble.Tipo" class="form-control" id="tipo" name="tipo"
-                        placeholder="Ingrese el tipo">
-                </div>
-                <div class="form-group">
-                    <label for="cantidadAmbientes" class="form-label"><i class="ion-ios-home"></i> Cantidad de
-                        ambientes</label>
-                    <input type="text" value="@Inmueble.CantidadAmbientes" class="form-control"
-                        id="cantidadAmbientes" name="cantidadAmbientes" placeholder="Ingrese la cantidad de ambientes">
-                </div>
-                <div class="form-group">
-                    <label for="coordenadas" class="form-label"><i class="ion-pinpoint"></i> Coordenadas</label>
-                    <input type="text" value="@Inmueble.Coordenadas" class="form-control" id="coordenadas"
-                        name="coordenadas" placeholder="Ingrese las coordenadas">
-                </div>
-                <div class="form-group">
-                    <label for="precioInmueble" class="form-label"><i class="ion-cash"></i> Precio</label>
-                    <input type="text" value="@Inmueble.PrecioInmueble" class="form-control" id="precioInmueble"
-                        name="precioInmueble" placeholder="Ingrese el precio">
-                </div>
-                <div class="form-group">
-                    <label for="estado" class="form-label"><i class="ion-checkmark-circled"></i> Estado</label>
-                    <select class="form-control" id="estado" name="estado">
-                        <option value="disponible">disponible</option>
-                        <option value="agotado">agotado</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="idPropietario" class="form-label"><i class="ion-person"></i> Propietario</label>
-                    <select class="form-control select2" id="idPropietario" name="idPropietario">
-                        @foreach (var propietario in ListaPropietarios)
-                        {
-                             @:<option value="@propietario.Id" @(propietario.Id == @Inmueble.IdPropietario ? "selected" : "")> @propietario.ToString() </option>
-                        }
-                    </select>
+
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="control-label"><i class="ion-image"></i> Avatar</label>
+                        <input type="file" value="@Inmueble.AvatarUrl" class="form-control" name="AvatarFile"
+                            id="AvatarFile" />
+                    </div>
+                    <div id="contain-image" class="d-flex justify-content-center align-items-end col-md-6 mt-2">
+                        <img id="image" src="@Inmueble.AvatarUrl">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="direccion" class="form-label"><i class="ion-location"></i> Direccion</label>
+                        <input type="text" value="@Inmueble.Direccion" class="form-control" id="direccion"
+                            name="direccion" placeholder="Ingrese la direccion">
+                    </div>
+                    <div class="form-group">
+                        <label for="uso" class="form-label"><i class="ion-flag"></i> Uso</label>
+                        <input type="text" value="@Inmueble.Uso" class="form-control" id="uso" name="uso"
+                            placeholder="Ingrese el uso">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo" class="form-label"><i class="ion-card"></i> Tipo</label>
+                        <input type="text" value="@Inmueble.Tipo" class="form-control" id="tipo" name="tipo"
+                            placeholder="Ingrese el tipo">
+                    </div>
+                    <div class="form-group">
+                        <label for="cantidadAmbientes" class="form-label"><i class="ion-ios-home"></i> Cantidad de
+                            ambientes</label>
+                        <input type="text" value="@Inmueble.CantidadAmbientes" class="form-control"
+                            id="cantidadAmbientes" name="cantidadAmbientes"
+                            placeholder="Ingrese la cantidad de ambientes">
+                    </div>
+                    <div class="form-group">
+                        <label for="coordenadas" class="form-label"><i class="ion-pinpoint"></i> Coordenadas</label>
+                        <input type="text" value="@Inmueble.Coordenadas" class="form-control" id="coordenadas"
+                            name="coordenadas" placeholder="Ingrese las coordenadas">
+                    </div>
+                    <div class="form-group">
+                        <label for="precioInmueble" class="form-label"><i class="ion-cash"></i> Precio</label>
+                        <input type="text" value="@Inmueble.PrecioInmueble" class="form-control" id="precioInmueble"
+                            name="precioInmueble" placeholder="Ingrese el precio">
+                    </div>
+                    <div class="form-group">
+                        <label for="estado" class="form-label"><i class="ion-checkmark-circled"></i> Estado</label>
+                        <select class="form-control" id="estado" name="estado">
+                            <option value="disponible">disponible</option>
+                            <option value="agotado">agotado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="idPropietario" class="form-label"><i class="ion-person"></i> Propietario</label>
+                        <select class="form-control select2" id="idPropietario" name="idPropietario">
+                            @foreach (var propietario in ListaPropietarios)
+                            {
+                                @:<option value="@propietario.Id" @(propietario.Id == @Inmueble.IdPropietario ? "selected" :
+                                "")> @propietario.ToString() </option>
+                            }
+                        </select>
+                    </div>
                 </div>
                 <div class="text-center mt-4">
                     <button type="submit" class="btn btn-primary"><i class="ion-ios-checkmark"></i> Guardar</button>
@@ -99,6 +113,25 @@
     .btn-primary:hover {
         background-color: #0E68C2;
         border-color: #0E68C2;
+    }
+
+    #AvatarFile {
+        height: 100px;
+    }
+
+    #AvatarFile::-webkit-file-upload-button {
+        height: 100px;
+    }
+
+    #AvatarFile::-ms-browse {
+        height: 100px;
+    }
+
+    #image {
+        width: 100px;
+        height: 100px;
+        border: .5px solid rgba(36, 34, 34, 0.507);
+        border-radius: 50%;
     }
 </style>
 

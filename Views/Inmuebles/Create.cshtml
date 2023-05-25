@@ -1,3 +1,4 @@
+@model INMOBILIARIA_REST.Models.Inmueble
 @{
     ViewData["Title"] = "Crear Inmueble";
     var ListaPropietarios = (IList<Propietario>)ViewBag.listaPropietarios;
@@ -9,22 +10,28 @@
             <h3 class="card-title mb-0">Nuevo Inmueble</h3>
         </div>
         <div class="card-body">
-            <form asp-action="Create" method="post">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+
                 <div class="form-group">
-                    <label for="direccion" class="form-label"><i class="ion-location"></i> Direccion</label>
-                    <input type="text" class="form-control" id="direccion" name="direccion"
+                    <label asp-for="AvatarFile" class="control-label"><i class="ion-image"></i> Avatar</label>
+                    <input type="file" class="form-control" name="AvatarFile" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><i class="ion-location"></i> Direccion</label>
+                    <input type="text" class="form-control" id="direccion" asp-for="Direccion"
                         placeholder="Ingrese la direccion">
                 </div>
                 <div class="form-group">
-                    <label for="uso" class="form-label"><i class="ion-flag"></i> Uso</label>
-                    <select class="form-control" id="uso" name="uso">
+                    <label class="form-label"><i class="ion-flag"></i> Uso</label>
+                    <select class="form-control" id="uso" asp-for="Uso">
                         <option value="comercial">Comercial</option>
                         <option value="residencial">Residencial</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="tipo" class="form-label"><i class="ion-card"></i> Tipo</label>
-                    <select class="form-control" id="tipo" name="tipo">
+                    <label  class="form-label"><i class="ion-card"></i> Tipo</label>
+                    <select class="form-control" id="tipo" asp-for="Tipo">
                         <option value="local">local</option>
                         <option value="deposito">deposito</option>
                         <option value="casa">casa</option>
@@ -32,31 +39,31 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="cantidadAmbientes" class="form-label"><i class="ion-ios-home"></i> Cantidad de
+                    <label class="form-label"><i class="ion-ios-home"></i> Cantidad de
                         ambientes</label>
-                    <input type="number" class="form-control" id="cantidadAmbientes" name="cantidadAmbientes"
+                    <input type="number" class="form-control" id="cantidadAmbientes" asp-for="CantidadAmbientes"
                         placeholder="Ingrese la cantidad de ambientes">
                 </div>
                 <div class="form-group">
-                    <label for="coordenadas" class="form-label"><i class="ion-pinpoint"></i> Coordenadas</label>
-                    <input type="text" class="form-control" id="coordenadas" name="coordenadas"
+                    <label class="form-label"><i class="ion-pinpoint"></i> Coordenadas</label>
+                    <input type="text" class="form-control" id="coordenadas" asp-for="Coordenadas"
                         placeholder="Ingrese las coordenadas">
                 </div>
                 <div class="form-group">
-                    <label for="precioInmueble" class="form-label"><i class="ion-cash"></i> Precio</label>
-                    <input type="number" class="form-control" id="precioInmueble" name="precioInmueble"
+                    <label class="form-label"><i class="ion-cash"></i> Precio</label>
+                    <input type="number" class="form-control" id="precioInmueble" asp-for="PrecioInmueble"
                         placeholder="Ingrese el precio">
                 </div>
                 <div class="form-group">
-                    <label for="estado" class="form-label"><i class="ion-checkmark-circled"></i> Estado</label>
-                    <select class="form-control" id="estado" name="estado">
+                    <label class="form-label"><i class="ion-checkmark-circled"></i> Estado</label>
+                    <select class="form-control" id="estado" asp-for="Estado">
                         <option value="disponible">disponible</option>
                         <option value="agotado">agotado</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="idPropietario" class="form-label"><i class="ion-person"></i> Propietario</label>
-                    <select class="form-control select2" id="idPropietario" name="idPropietario">
+                    <label class="form-label"><i class="ion-person"></i> Propietario</label>
+                    <select class="form-control select2" id="idPropietario" asp-for="IdPropietario">
                         <option value="">Seleccione un propietario...</option>
                         @foreach (var propietario in ListaPropietarios)
                         {

@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
+namespace INMOBILIARIA_REST.Models{
+
 public class Inmueble
 {
 
@@ -23,6 +25,10 @@ public class Inmueble
     public decimal PrecioInmueble { get; set; }
     public string? Estado { get; set; } //disponible no disponible
 
+    public string AvatarUrl { get; set; }
+    [NotMapped]
+    public IFormFile? AvatarFile { get; set; }
+
     public override string ToString()
     {
         return 
@@ -36,5 +42,7 @@ public class Inmueble
                $" Estado: {Estado}";
     }
 
+
+}
 
 }

@@ -20,6 +20,10 @@ namespace INMOBILIARIA_REST.Models
         [Required, DataType(DataType.Password)]
         public string Clave { get; set; }
 
+        public string AvatarUrl { get; set; }
+        [NotMapped]
+        public IFormFile? AvatarFile { get; set; }
+
         [NotMapped]
         public string? ClaveAntigua { get; set; }
 
@@ -32,7 +36,7 @@ namespace INMOBILIARIA_REST.Models
 
         public override string ToString()
         {
-            return $"Id: {Id}, Dni: {Dni}, Nombre: {Nombre}, Apellido: {Apellido}, Teléfono: {Telefono}, Email: {Email}, Clave: {Clave}, ClaveAntigua: {ClaveAntigua}, NuevaClave: {NuevaClave}, ConfirmarClave: {ConfirmarClave}";
+            return $"Dni: {Dni}, Nombre: {Nombre}, Apellido: {Apellido}, Teléfono: {Telefono}, Email: {Email}";
         }
 
 

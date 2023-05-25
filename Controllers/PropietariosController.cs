@@ -55,7 +55,7 @@ namespace INMOBILIARIA_REST.Controllers
         [HttpPost]
         public IActionResult Create(Propietario propietarioForm)
         {
-            Console.WriteLine(propietarioForm.ToString());
+
             try
             {
                 RepositorioPropietario repositorioPropietario = new RepositorioPropietario();
@@ -89,23 +89,42 @@ namespace INMOBILIARIA_REST.Controllers
                                  numBytesRequested: 256 / 8));
                 propietarioForm.Clave = hashed;
 
-
-                int res = repositorioPropietario.Alta(propietarioForm);
-                if (res > 0)
+                if (propietarioForm.AvatarFile == null || propietarioForm.AvatarFile.Length == 0)
                 {
-                    return RedirectToAction("index");
-                }
-                else
-                {
-                    TempData["Error"] = "Por favor llene todos los campos y ponga los datos correctamente";
+                    propietarioForm.AvatarUrl = "/Imagenes/avatar_por_defecto.jpg";
+                    repositorioPropietario.Alta(propietarioForm);
                     return RedirectToAction("Create");
                 }
+                 else
+                {
+                    string wwwPath = environment.WebRootPath;
+                    string path = Path.Combine(wwwPath, "Uploads");
+
+                    string fileName = "avatar_" + Guid.NewGuid().ToString("N") + Path.GetExtension(propietarioForm.AvatarFile.FileName);
+                    string pathCompleto = Path.Combine(path, fileName);
+                    propietarioForm.AvatarUrl = Path.Combine("/Uploads", fileName);
+
+                    int res = repositorioPropietario.Alta(propietarioForm);
+                    if (res > 0)
+                    {
+                        // Esta operación guarda la foto en memoria en la ruta que necesitamos
+                        using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                        {
+                            propietarioForm.AvatarFile.CopyTo(stream);
+                        }
+                        return RedirectToAction("Create");
+                    }
+
+                 }
+
+               
             }
             catch (Exception ex)
             {
                 TempData["Error"] = ex.Message;
                 return RedirectToAction("Create");
             }
+            return View(propietarioForm);
         }
 
         public static bool VerificarContrasena(string contrasena)
@@ -141,9 +160,31 @@ namespace INMOBILIARIA_REST.Controllers
             try
             {
                 RepositorioPropietario repositorioPropietario = new RepositorioPropietario();
+                
+                Propietario propietario = repositorioPropietario.ObtenerPorId(id);
+                
                 Boolean res = repositorioPropietario.Baja(id);
                 if (res == true)
                 {
+                     try
+            {
+                var ruta = Path.Combine(environment.WebRootPath, propietario.AvatarUrl.TrimStart('/').Replace('/', '\\'));
+
+                
+                if (ruta.StartsWith(Path.Combine(environment.WebRootPath, "Uploads")))
+                {
+                    if (System.IO.File.Exists(ruta))
+                    {
+                        System.IO.File.Delete(ruta);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                TempData["Error"] = "Ocurrió un error al intentar eliminar el avatar del usuario.";
+                return RedirectToAction("Index");
+            }
                     return RedirectToAction("index");
                 }
                 else
@@ -202,6 +243,7 @@ namespace INMOBILIARIA_REST.Controllers
                                      iterationCount: 30000,
                                      numBytesRequested: 256 / 8));
 
+
                     if (propietario.Clave != hashed)
                     {
                         TempData["Error"] = "la clave antigua ingresada no es correcta";
@@ -233,37 +275,60 @@ namespace INMOBILIARIA_REST.Controllers
 
                 }
 
+                if (propietario.AvatarFile == null || propietario.AvatarFile.Length == 0)
+                    {
+                        propietario.AvatarUrl = u.AvatarUrl;
+                    }else
+                    {
+                        string wwwPath = environment.WebRootPath;
+                        string path = Path.Combine(wwwPath, "Uploads");
+                        string fileName = "avatar_" + Guid.NewGuid().ToString("N") + Path.GetExtension(propietario.AvatarFile.FileName);
+                        string pathCompleto = Path.Combine(path, fileName);
+                        propietario.AvatarUrl = Path.Combine("/Uploads", fileName);
+
+                        var ruta = Path.Combine(environment.WebRootPath, u.AvatarUrl.TrimStart('/').Replace('/', '\\'));
+
+                        // Verifica que la ruta comience con "/Uploads"
+                        if (ruta.StartsWith(Path.Combine(environment.WebRootPath, "Uploads")))
+                        {
+                            if (System.IO.File.Exists(ruta))
+                            {
+                                System.IO.File.Delete(ruta);
+                            }
+                        }
+
+                        using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                        {
+                            propietario.AvatarFile.CopyTo(stream);
+                        }
+                    }
+
 
                 if (propietario.Email != u.Email)
-        {
-            List<Propietario> propietarioEmail = respositorioPersona.ObtenerPorEmailList(propietario.Email);
-            if (propietarioEmail.Count >= 1)
-            {
-                TempData["Error"] = "ya hay un usuario con este email";
-                return RedirectToAction("Update", new { id = propietario.Id });
-            }
-        }
-
-
-
-
-
+                {
+                   List<Propietario> propietarioEmail = respositorioPersona.ObtenerPorEmailList(propietario.Email);
+                if (propietarioEmail.Count >= 1)
+                 {
+                      TempData["Error"] = "ya hay un usuario con este email";
+                   return RedirectToAction("Update", new { id = propietario.Id });
+                 }
+                 }
 
                     Boolean res = respositorioPersona.Actualizar(propietario);
                     if (res == true)
                     {
-                        return RedirectToAction("index");
+                        return RedirectToAction("Update", new { id = propietario.Id });
                     }
                     else
                     {
                         TempData["Error"] = "Por favor llene todos los campos y ponga los datos correctamente";
-                        return RedirectToAction("Update");
+                        return RedirectToAction("Update", new { id = propietario.Id });
                     }
                 }
             catch (Exception ex)
             {
                 TempData["Error"] = "Por favor llene todos los campos y ponga los datos correctamente";
-                return RedirectToAction("Update");
+                return RedirectToAction("Update", new { id = propietario.Id });
             }
         }
     }

@@ -33,6 +33,7 @@ public class RepositorioInmueble
                         inmueble.Coordenadas = Convert.ToString(reader["coordenadas"]);
                         inmueble.PrecioInmueble = Convert.ToDecimal(reader["precioInmueble"]);
                         inmueble.Estado = Convert.ToString(reader["estado"]);
+                        inmueble.AvatarUrl = reader.GetString("AvatarUrl");
                         return inmueble;
                     }
 
@@ -50,7 +51,7 @@ public class RepositorioInmueble
         {
             string query = @"SELECT c.Id, c.FechaInicio, c.FechaFinalizacion, c.MontoAlquilerMensual, c.Activo, c.IdInquilino, IdInmueble,
                         i.Nombre, i.Apellido, i.Dni, i.Telefono, i.Email, i.Id,
-                        inmueble.Id, inmueble.Direccion, inmueble.Uso, inmueble.Tipo, inmueble.IdPropietario, inmueble.CantidadAmbientes, inmueble.Coordenadas, inmueble.PrecioInmueble, inmueble.Estado
+                        inmueble.Id, inmueble.Direccion, inmueble.Uso, inmueble.Tipo, inmueble.IdPropietario, inmueble.CantidadAmbientes, inmueble.Coordenadas, inmueble.PrecioInmueble, inmueble.Estado, inmueble.AvatarUrl
                         FROM contrato c
                         JOIN inquilino i ON c.IdInquilino = i.Id
                         JOIN inmueble ON c.IdInmueble = inmueble.Id";
@@ -92,6 +93,9 @@ public class RepositorioInmueble
                                 Coordenadas = reader.GetString("Coordenadas"),
                                 PrecioInmueble = reader.GetDecimal("PrecioInmueble"),
                                 Estado = reader.GetString("Estado"),
+                                AvatarUrl = reader.GetString("AvatarUrl"),
+                             
+                                
                             },
                         };
 
@@ -108,8 +112,8 @@ public class RepositorioInmueble
         List<Inmueble> inmuebles = new List<Inmueble>();
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
-            var query = @"SELECT i.Id, i.Direccion, i.Uso, i.Tipo, i.CantidadAmbientes, i.Coordenadas, i.PrecioInmueble, i.Estado,
-                        p.Nombre, p.Apellido, p.Dni, p.Telefono, p.Id, p.Email
+            var query = @"SELECT i.Id, i.Direccion, i.Uso, i.Tipo, i.CantidadAmbientes, i.Coordenadas, i.PrecioInmueble, i.Estado, i.AvatarUrl,
+                        p.Nombre, p.Apellido, p.Dni, p.Telefono, p.Id, p.Email, p.AvatarUrl
                         FROM inmueble i
                         JOIN propietario p ON i.IdPropietario = p.Id
                         ";
@@ -131,6 +135,7 @@ public class RepositorioInmueble
                             Coordenadas = reader.GetString(nameof(inmueble.Coordenadas)),
                             PrecioInmueble = reader.GetDecimal(nameof(inmueble.PrecioInmueble)),
                             Estado = reader.GetString(nameof(inmueble.Estado)),
+                            AvatarUrl = reader.GetString(nameof(inmueble.AvatarUrl)),
                             Propietario = new Propietario()
                             {
                                 Nombre = reader.GetString(nameof(Propietario.Nombre)),
@@ -139,6 +144,7 @@ public class RepositorioInmueble
                                 Telefono = reader.GetInt64(nameof(Propietario.Telefono)),
                                 Id = reader.GetInt32(nameof(Propietario.Id)),
                                 Email = reader.GetString(nameof(Propietario.Email)),
+                                AvatarUrl = reader.GetString(nameof(Propietario.AvatarUrl)),
                             },
                         };
                         inmuebles.Add(inmueble);
@@ -154,7 +160,7 @@ public class RepositorioInmueble
         List<Propietario> propietarios = new List<Propietario>();
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
-            var query = @"SELECT Id,Dni,Nombre,Apellido,Telefono,Email
+            var query = @"SELECT Id,Dni,Nombre,Apellido,Telefono,Email,AvatarUrl
             FROM propietario";
             using (var command = new MySqlCommand(query, connection))
             {
@@ -171,6 +177,7 @@ public class RepositorioInmueble
                             Apellido = reader.GetString(nameof(Propietario.Apellido)),
                             Telefono = reader.GetInt64(nameof(Propietario.Telefono)),
                             Email = reader.GetString(nameof(Propietario.Email)),
+                            AvatarUrl = reader.GetString(nameof(Propietario.AvatarUrl)),
                         };
                         propietarios.Add(propietario);
                     }
@@ -182,33 +189,34 @@ public class RepositorioInmueble
     }
 
     public int Alta(Inmueble inmueble)
+{
+    int res = 0;
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
-        int res = 0;
-        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        string query = @"INSERT INTO Inmueble (Direccion,Estado,Uso,Tipo,CantidadAmbientes,Coordenadas, PrecioInmueble, IdPropietario, AvatarUrl)
+                         VALUES (@direccion,@estado,@uso,@tipo,@cantidadAmbientes,@coordenadas,@precioInmueble,@idPropietario, @avatarUrl);
+                         SELECT LAST_INSERT_ID();";
+        using (MySqlCommand command = new MySqlCommand(query, connection))
         {
-            string query = @"INSERT INTO Inmueble (Direccion,Estado,Uso,Tipo,CantidadAmbientes,Coordenadas, PrecioInmueble, IdPropietario)
-             VALUES (@direccion,@estado,@uso,@tipo,@cantidadAmbientes,@coordenadas,@precioInmueble,@idPropietario);
-        SELECT LAST_INSERT_ID();";
-            using (MySqlCommand command = new MySqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@direccion", inmueble.Direccion);
-                command.Parameters.AddWithValue("@estado", inmueble.Estado);
-                command.Parameters.AddWithValue("@uso", inmueble.Uso);
-                command.Parameters.AddWithValue("@tipo", inmueble.Tipo);
-                command.Parameters.AddWithValue("@cantidadAmbientes", inmueble.CantidadAmbientes);
-                command.Parameters.AddWithValue("@coordenadas", inmueble.Coordenadas);
+            command.Parameters.AddWithValue("@direccion", inmueble.Direccion);
+            command.Parameters.AddWithValue("@estado", inmueble.Estado);
+            command.Parameters.AddWithValue("@uso", inmueble.Uso);
+            command.Parameters.AddWithValue("@tipo", inmueble.Tipo);
+            command.Parameters.AddWithValue("@cantidadAmbientes", inmueble.CantidadAmbientes);
+            command.Parameters.AddWithValue("@coordenadas", inmueble.Coordenadas);
+            command.Parameters.AddWithValue("@precioInmueble", inmueble.PrecioInmueble);
+            command.Parameters.AddWithValue("@idPropietario", inmueble.IdPropietario);
+            command.Parameters.AddWithValue("@avatarUrl", inmueble.AvatarUrl);
 
-                command.Parameters.AddWithValue("@precioInmueble", inmueble.PrecioInmueble);
-                command.Parameters.AddWithValue("@idPropietario", inmueble.IdPropietario);
-
-                connection.Open();
-                res = Convert.ToInt32(command.ExecuteScalar());
-                inmueble.Id = res;
-                connection.Close();
-            }
+            connection.Open();
+            res = Convert.ToInt32(command.ExecuteScalar());
+            inmueble.Id = res;
+            connection.Close();
         }
-        return res;
     }
+    return res;
+}
+
 
     public Boolean Baja(int id)
 {
@@ -237,7 +245,7 @@ public class RepositorioInmueble
         Boolean res = false;
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
-            string query = @"UPDATE inmueble SET Direccion = @direccion, Estado = @estado, Uso = @uso, Tipo = @tipo, CantidadAmbientes = @cantidadAmbientes, Coordenadas = @coordenadas, PrecioInmueble = @precioInmueble, IdPropietario = @idPropietario WHERE Id = @id";
+            string query = @"UPDATE inmueble SET Direccion = @direccion, Estado = @estado, Uso = @uso, Tipo = @tipo, CantidadAmbientes = @cantidadAmbientes, Coordenadas = @coordenadas, PrecioInmueble = @precioInmueble, IdPropietario = @idPropietario, AvatarUrl=@avatarUrl WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 if (inmueble.Direccion != null && inmueble.Estado != null && inmueble.Uso != null && inmueble.Tipo != null && inmueble.CantidadAmbientes > 0 && inmueble.Coordenadas != null && inmueble.PrecioInmueble > 0)
@@ -252,6 +260,8 @@ public class RepositorioInmueble
 
                     command.Parameters.AddWithValue("@precioInmueble", inmueble.PrecioInmueble);
                     command.Parameters.AddWithValue("@idPropietario", inmueble.IdPropietario);
+                    command.Parameters.AddWithValue("@avatarUrl", inmueble.AvatarUrl);
+
                     connection.Open();
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
@@ -270,7 +280,7 @@ public class RepositorioInmueble
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = @"
-                SELECT i.Id, i.Direccion, i.Uso, i.Tipo, i.CantidadAmbientes, i.Coordenadas, i.PrecioInmueble, i.Estado,
+                SELECT i.Id, i.Direccion, i.Uso, i.Tipo, i.CantidadAmbientes, i.Coordenadas, i.PrecioInmueble, i.Estado, i.AvatarUrl,
                        p.Nombre, p.Apellido, p.Dni, p.Telefono, p.Email
                 FROM inmueble i
                 JOIN propietario p ON i.IdPropietario = p.Id
@@ -300,6 +310,7 @@ public class RepositorioInmueble
                             Coordenadas = reader.GetString(nameof(inmueble.Coordenadas)),
                             PrecioInmueble = reader.GetDecimal(nameof(inmueble.PrecioInmueble)),
                             Estado = reader.GetString(nameof(inmueble.Estado)),
+                            AvatarUrl = reader.GetString(nameof(inmueble.AvatarUrl)),
                             Propietario = new Propietario()
                             {
                                 Nombre = reader.GetString(nameof(Propietario.Nombre)),

@@ -15,7 +15,7 @@ public class RepositorioPropietario
         List<Propietario> propietarios = new List<Propietario>();
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
-            var query = @"SELECT Id,Dni,Nombre,Apellido,Telefono,Email
+            var query = @"SELECT Id,Dni,Nombre,Apellido,Telefono,Email,AvatarUrl
             FROM propietario";
             using (var command = new MySqlCommand(query, connection))
             {
@@ -32,6 +32,7 @@ public class RepositorioPropietario
                             Apellido = reader.GetString(nameof(Propietario.Apellido)),
                             Telefono = reader.GetInt64(nameof(Propietario.Telefono)),
                             Email = reader.GetString(nameof(Propietario.Email)),
+                            AvatarUrl = reader.GetString(nameof(Propietario.AvatarUrl)),
                         };
                         propietarios.Add(propietario);
                     }
@@ -94,7 +95,7 @@ public class RepositorioPropietario
         int res = 0;
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
-            string query = @"INSERT INTO propietario (Nombre,Apellido,Dni,Telefono,Email,Clave) VALUES (@nombre,@apellido,@dni,@telefono,@email,@clave);
+            string query = @"INSERT INTO propietario (Nombre,Apellido,Dni,Telefono,Email,Clave, AvatarUrl) VALUES (@nombre,@apellido,@dni,@telefono,@email,@clave,@avatarUrl);
         SELECT LAST_INSERT_ID();";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -104,6 +105,7 @@ public class RepositorioPropietario
                 command.Parameters.AddWithValue("@telefono", propietario.Telefono);
                 command.Parameters.AddWithValue("@email", propietario.Email);
                 command.Parameters.AddWithValue("@clave", propietario.Clave);
+                command.Parameters.AddWithValue("@avatarUrl", propietario.AvatarUrl);
                 connection.Open();
                 res = Convert.ToInt32(command.ExecuteScalar());
                 propietario.Id = res;
@@ -156,6 +158,7 @@ public class RepositorioPropietario
                         propietario.Telefono = Convert.ToInt64(reader["telefono"]);
                         propietario.Email = Convert.ToString(reader["email"]);
                         propietario.Clave = reader.GetString("Clave");
+                        propietario.AvatarUrl = reader.GetString("AvatarUrl");
                         return propietario;
                     }
 
@@ -171,7 +174,7 @@ public class RepositorioPropietario
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             string query = @"SELECT
-                Id, Nombre, Apellido, Dni, Email, Clave FROM propietario
+                Id, Nombre, Apellido, Dni, Email, Clave, AvatarUrl FROM propietario
                 WHERE Email=@email";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -188,6 +191,7 @@ public class RepositorioPropietario
                         propietario.Dni = reader.GetInt64("Dni");
                         propietario.Email = reader.GetString("Email");
                         propietario.Clave = reader.GetString("Clave");
+                        propietario.AvatarUrl = reader.GetString("AvatarUrl");
 
                         return propietario;
                     }
@@ -202,7 +206,7 @@ public class RepositorioPropietario
         Boolean res = false;
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
-            string query = @"UPDATE propietario SET Nombre = @nombre, Apellido = @apellido, Telefono = @telefono, Dni = @dni, Email = @email, Clave=@clave WHERE Id = @id";
+            string query = @"UPDATE propietario SET Nombre = @nombre, Apellido = @apellido, Telefono = @telefono, Dni = @dni, Email = @email, Clave=@clave, AvatarUrl=@avatarUrl WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 if (propietario.Nombre != null && propietario.Apellido != null && propietario.Dni > 0 && propietario.Telefono > 0 && propietario.Email != null)
@@ -214,6 +218,7 @@ public class RepositorioPropietario
                     command.Parameters.AddWithValue("@telefono", propietario.Telefono);
                     command.Parameters.AddWithValue("@email", propietario.Email);
                     command.Parameters.AddWithValue("@clave", propietario.Clave);
+                    command.Parameters.AddWithValue("@avatarUrl", propietario.AvatarUrl);
                     connection.Open();
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
