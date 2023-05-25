@@ -20,11 +20,13 @@ public class PropietarioController : ControllerBase
 {
     private readonly DataContext _context;
     private readonly IConfiguration _configuration;
+    private readonly IWebHostEnvironment environment;
 
-    public PropietarioController(DataContext context, IConfiguration configuration)
+    public PropietarioController(DataContext context, IConfiguration configuration, IWebHostEnvironment environment)
     {
         _context = context;
         _configuration = configuration;
+        this.environment = environment;
     }
 
 
@@ -126,7 +128,45 @@ public class PropietarioController : ControllerBase
 
 
 
-   
+    // GET api/propietario/imagen/{id}
+    [HttpGet("imagen/{id}")]
+    public IActionResult ObtenerImagenPropietario(int id)
+    {
+        var propietario = _context.Propietario.FirstOrDefault(x => x.Id == id);
+        if (propietario == null)
+        {
+            return NotFound();
+        }
+
+        var wwwPath = environment.WebRootPath;
+        var ruta = Path.Combine(wwwPath, propietario.AvatarUrl.TrimStart('/').Replace('/', '\\'));
+
+        if (ruta.StartsWith(Path.Combine(wwwPath, "Uploads")))
+        {
+            if (System.IO.File.Exists(ruta))
+            {
+                var fileBytes = System.IO.File.ReadAllBytes(ruta);
+                return File(fileBytes, "image/jpeg");
+            }
+        }
+        else
+        {
+            // Ruta por defecto para la imagen
+            var defaultImagePath = Path.Combine(wwwPath, "imagenes", "avatar_por_defecto.jpg");
+            if (System.IO.File.Exists(defaultImagePath))
+            {
+                var fileBytes = System.IO.File.ReadAllBytes(defaultImagePath);
+                return File(fileBytes, "image/jpeg");
+            }
+        }
+
+        return NotFound();
+    }
+
+
+
+
+
 
 
 }
