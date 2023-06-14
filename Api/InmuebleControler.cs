@@ -122,7 +122,7 @@ public class InmuebleController : ControllerBase
 
 
     // Dado un Contrato, retorna los pagos de dicho contrato
-    [HttpGet("pagos-contrato/{contratoId}")]
+    [HttpGet("pagos-contrato/{contratoId:int:min(1)}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult ObtenerPagosContrato(int contratoId)
     {
@@ -163,64 +163,62 @@ public class InmuebleController : ControllerBase
 
 
 
-
-
-// Actualizar Perfil
-[HttpPost("actualizar-perfil")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public ActionResult<Propietario> ActualizarPerfil([FromBody] Propietario propietario)
-{
-    if (propietario == null)
+    // Actualizar Perfil
+    [HttpPost("actualizar-perfil")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public ActionResult<Propietario> ActualizarPerfil([FromBody] Propietario propietario)
     {
-        return BadRequest("No se proporcionó un propietario válido.");
-    }
-
-    var propietarioExistente = _context.Propietario.FirstOrDefault(p => p.Id == propietario.Id);
-    var emailExistente = _context.Propietario.Any(p => p.Id != propietario.Id && p.Email == propietario.Email);
-
-    if (emailExistente)
-    {
-        return BadRequest("El email ya está en uso por otro propietario.");
-    }
-
-    if (propietarioExistente != null)
-    {
-        // Actualizar los campos del propietario existente
-        propietarioExistente.Dni = propietario.Dni;
-        propietarioExistente.Nombre = propietario.Nombre;
-        propietarioExistente.Apellido = propietario.Apellido;
-        propietarioExistente.Telefono = propietario.Telefono;
-        propietarioExistente.Email = propietario.Email;
-
-        if (!string.IsNullOrEmpty(propietario.Clave))
+        if (propietario == null)
         {
-            // Validar la nueva contraseña
-            if (propietario.Clave.Length < 8 || !propietario.Clave.Any(char.IsUpper))
-            {
-                return BadRequest("La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula.");
-            }
-
-            // Hashear la contraseña
-            string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: propietario.Clave,
-                salt: System.Text.Encoding.ASCII.GetBytes(_configuration["Salt"]),
-                prf: KeyDerivationPrf.HMACSHA1,
-                iterationCount: 30000,
-                numBytesRequested: 256 / 8));
-
-            propietarioExistente.Clave = hashedPassword;
+            return BadRequest("No se proporcionó un propietario válido.");
         }
 
-        propietarioExistente.AvatarUrl = propietario.AvatarUrl;
+        var propietarioExistente = _context.Propietario.FirstOrDefault(p => p.Id == propietario.Id);
+        var emailExistente = _context.Propietario.Any(p => p.Id != propietario.Id && p.Email == propietario.Email);
 
-        // Guardar los cambios en la base de datos
-        _context.SaveChanges();
+        if (emailExistente)
+        {
+            return BadRequest("El email ya está en uso por otro propietario.");
+        }
 
-        return Ok(propietarioExistente);
+        if (propietarioExistente != null)
+        {
+            // Actualizar los campos del propietario existente
+            propietarioExistente.Dni = propietario.Dni;
+            propietarioExistente.Nombre = propietario.Nombre;
+            propietarioExistente.Apellido = propietario.Apellido;
+            propietarioExistente.Telefono = propietario.Telefono;
+            propietarioExistente.Email = propietario.Email;
+
+            if (!string.IsNullOrEmpty(propietario.Clave))
+            {
+                // Validar la nueva contraseña
+                if (propietario.Clave.Length < 8 || !propietario.Clave.Any(char.IsUpper))
+                {
+                    return BadRequest("La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula.");
+                }
+
+                // Hashear la contraseña
+                string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: propietario.Clave,
+                    salt: System.Text.Encoding.ASCII.GetBytes(_configuration["Salt"]),
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 30000,
+                    numBytesRequested: 256 / 8));
+
+                propietarioExistente.Clave = hashedPassword;
+            }
+
+            propietarioExistente.AvatarUrl = propietario.AvatarUrl;
+
+            // Guardar los cambios en la base de datos
+            _context.SaveChanges();
+
+            return Ok(propietarioExistente);
+        }
+
+        return NotFound("No se encontró el propietario especificado.");
     }
-
-    return NotFound("No se encontró el propietario especificado.");
-}
 
 
 

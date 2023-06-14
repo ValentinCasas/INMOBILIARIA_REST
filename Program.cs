@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 //builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001")//permite escuchar SOLO peticiones locales
-builder.WebHost.UseUrls("http://localhost:5200", "http://*:5200", "http://192.168.0.102:5200");//permite escuchar peticiones locales y remotas
+builder.WebHost.UseUrls("http://localhost:5200", "http://*:5200", "http://192.168.0.101:5200");//permite escuchar peticiones locales y remotas
 
 builder.Services.AddControllersWithViews();
 

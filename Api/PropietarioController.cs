@@ -31,7 +31,7 @@ public class PropietarioController : ControllerBase
 
 
     // GET: Propietario/:id
-    [HttpGet("{id}")]
+    [HttpGet("{id:int:min(1)}")]
     public IActionResult GetPropietario(int id)
     {
         return Ok(_context.Propietario.Find(id));
@@ -129,7 +129,7 @@ public class PropietarioController : ControllerBase
 
 
     // GET api/propietario/imagen/{id}
-    [HttpGet("imagen/{id}")]
+    [HttpGet("imagen/{id:int:min(1)}")]
     public IActionResult ObtenerImagenPropietario(int id)
     {
         var propietario = _context.Propietario.FirstOrDefault(x => x.Id == id);
